@@ -117,7 +117,7 @@ def _validate_json_response(rsp):
     """
     if rsp['stat'] != 'ok':
         sys.stderr.write('API request failed: Error %(code)s: %(message)s\n' % rsp)
-        sys.exit(1)
+        sysvalidate_json_response(rsp)
 
 
 def get_photo_datetime(photo):
@@ -464,6 +464,9 @@ class FlickrMirrorer(object):
                 symlink_basename = '%s_%s' % (str(i+1).zfill(digits), photo_basename)
                 symlink_filename = os.path.join(album_dir, symlink_basename)
                 os.symlink(photo_relname, symlink_filename)
+
+                metadata_relname = f"{photo_relname}.metadata"
+                os.symlink(metadata_relname, f"{symlink_filename}.metadata")
 
             # Write metadata
             self._write_json_if_different(metadata_filename, album)
